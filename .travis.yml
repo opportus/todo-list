@@ -25,6 +25,7 @@ install:
 
 before_script:
     - phpenv config-rm xdebug.ini || true
+    - bin/console server:start -q
     - |
         if [[ "$BLACKFIRE" = "on" ]]; then
             curl -L https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$(php -r "echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;")-zts | tar zxpf -
@@ -33,5 +34,4 @@ before_script:
         fi
 
 script:
-    - bin/console server:start -q
     - phpunit
