@@ -7,11 +7,6 @@ matrix:
         - php: 7.2
           env: BLACKFIRE=on
 
-env:
-    global:
-        - secure: "jCSuhHaqlXJYRKeT9Q7LJ8uJCmwcMGuBPTJBK5Xbxk1RIH6Hr26nhl45BF3IBt7hOC6VO/rJftitmrtkAVLzdeCA+r21gmzOSdm4xDAfjs4vwPcdm4emx6rt5nLqN5Ytlk2DYcMQCfLtQCWPYGacsaF6pWg121X38qRG08Q64NK69fsy9XQIeJOTXBd1aIYX9TMsgmDCvH8J1L77F+A3ecNeG6HDXdYAIvxBQyAIM2eicYE11TEWBeseMsFU3Q1rJdVVHyHT7MZqNpef6O+fTwE/WFVHpjj7bxHhVCtgp7CzwNUouoHYessdaOAhdP709IPaVLtDinCJT2Fo0F9Od9l/UWNclwLACwRH2oCIdOJkOGbzeYLeg21Arzpu0pL9bkO1JHGofufCj9UVJhLMYmF6lq2D/zIVRXvJj0qDMaxXkOUbIeemHBZ3hnoMr8qhC+Bp0WqKXaEorU4GbezhbfXLvcPeuxc2+8TWNzRWQAXKmk7KpuB21vxuNo08LmQjqmUQbEDOWLJCB3T9NUfgfdt0ZSzAjW4Qxmu5PJyjwB6VwIEQ0Vs0P5YMz6E3CkRWGExwkvj4DunaIvVY8UZRN1587uXSUfawpS37ZzqGnsJ2uAjZFwPRnqdRWe4d0w27dThmEN5RWvMkh7mwZ9x43sKTAKpF3rOce+YBNniu5bw="
-        - secure: "efYtT7Yiv4TActtfFKMjf8pWxyGHsGGnAzdiejDMx98+ejcgFOQpVO2hNM10+YZmysxpzNDst0uybrn2q9SuQU2uhZnIX8u/O6QD2sql0INbeih+l6TgyIbIX8vq1AbKg8vrHYLoN7+I7ijJMdQ/xOd2dg3pNkBDr92SkMej4kssbZ5EC2roCW0ueacjl+gWYZJCpz0CYOJP0P4vWZnPaDxJvzHzSk6EHIC3BlMYsR8YPeJYA4GFMTxD8fLI39/EgNfmTVIRSthHR4ZRNCWmYQi1L8C0Y0Sl7TVFWt8wxRsKU49Iwr8pZ1ZMG11mbYW6HqXikmPiEFpPsdKty4iOBOvUU62CndqT1/e6RjKzHHbPaZRXBQjNStLfaGL81O2BzO8ywBym3izidZJB4cKNtvjRTPcNJVc7X3NqQh8O1mm3HBt1RR8C9zTU1PpgvnKEEHwjQ9LNCQtIJMoqaZOM4Ib34nTXXYTvdXQqLwEsjjfB4CzfwR+pAwde+SuZ4LKhBuL1DGLTzZ/BKLOYV5y94+24BVvitr12D4F7gvxJU43dyZOX78rsEBFMo3LcQb3/nkaMWyr6whbdpIjHwE4Sf9WqQJ7w+Oh4EZj6cB5tEuhL4Y2MxoIDpk1THlr9JCD2maWaSjZyjRilN81wTkOjKR+FLMAW2SSAEj+BFt55vbU="
-
 sudo: false
 
 cache:
@@ -23,7 +18,6 @@ before_install:
             openssl aes-256-cbc -K $encrypted_df9dcb7decd5_key -iv $encrypted_df9dcb7decd5_iv -in .blackfire.travis.ini.enc -out ~/.blackfire.ini -d
             curl -L https://blackfire.io/api/v1/releases/agent/linux/amd64 | tar zxpf -
             chmod 755 agent && ./agent --config=~/.blackfire.ini --socket=unix:///tmp/blackfire.sock &
-            curl -L https://blackfire.io/api/v1/releases/client/linux/amd64 | tar zxpf -
         fi
 
 install:
@@ -39,8 +33,4 @@ before_script:
         fi
 
 script:
-    - phpunit
-    - |
-        if [[ "$BLACKFIRE" = "on" ]]; then
-            bin/console server:start && ./blackfire curl "http://localhost:8000" --client-id=$BLACKFIRE_CLIENT_ID --client-token=$BLACKFIRE_CLIENT_TOKEN
-        fi
+    - bin/console server:start -q && phpunit
