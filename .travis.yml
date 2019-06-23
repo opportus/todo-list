@@ -33,4 +33,5 @@ before_script:
         fi
 
 script:
-    - bin/console server:start -q && phpunit
+    - bin/console server:start -q
+    - phpunit
