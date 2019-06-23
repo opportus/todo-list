@@ -37,5 +37,5 @@ script:
     - phpunit
     - |
         if [[ "$BLACKFIRE" = "on" ]]; then
-            bin/console server:start && blackfire curl "http://localhost:8000"
+            bin/console server:start && ./blackfire curl "http://localhost:8000"
         fi
