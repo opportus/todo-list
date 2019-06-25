@@ -34,9 +34,9 @@ before_script:
         fi
 
 script:
-    - phpunit
-    - vendor/bin/php-cs-fixer fix --diff --dry-run -v
-    - bin/console lint:yaml config
-    - bin/console lint:twig templates
+    - vendor/bin/phpunit
+    #- vendor/bin/php-cs-fixer fix --diff --dry-run -v
+    - bin/console lint:yaml app/config
+    - bin/console lint:twig app/Resources/views
     - bin/console security:check
-    - bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
+    - bin/console doctrine:schema:validate --skip-sync --no-interaction
