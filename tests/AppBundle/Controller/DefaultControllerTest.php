@@ -2,38 +2,29 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Blackfire\Profile\Configuration as ProfileConfiguration;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use AppBundle\Framework\Test\CostAwareWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends CostAwareWebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetHomepage()
+    public function testGetHomepageUnauthenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/');
+        $testClient->request('GET', '/');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testGetHomepageAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('get_homepage');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('GET', '/');
 
-        $crawler = $httpClient->request('GET', '/');
-
-        $profile = $blackfireClient->endProbe($probe);
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !', $crawler->filter('.container h1')->text());
-
-        $this->outputCost($profile, $profileConfiguration);
     }
 }

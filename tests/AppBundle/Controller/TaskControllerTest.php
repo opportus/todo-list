@@ -2,273 +2,212 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Blackfire\Profile\Configuration as ProfileConfiguration;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use AppBundle\Framework\Test\CostAwareWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class TaskControllerTest extends WebTestCase
+class TaskControllerTest extends CostAwareWebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetTaskList()
+    public function testGetTaskListUnauthenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks');
+        $testClient->request('GET', '/tasks');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testGetTaskListAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('get_task_list');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('GET', '/tasks');
 
-        $crawler = $httpClient->request('GET', '/tasks');
-
-        $profile = $blackfireClient->endProbe($probe);
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals(2, $crawler->filter('.task')->count());
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
+        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author span')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(1)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(1)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(1)->filter('.status span')->attr('class')));
-
-        $this->outputCost($profile, $profileConfiguration);
+        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(1)->filter('.author span')->text()));
     }
 
-    public function testGetCreateTask()
+    public function testGetCreateTaskUnauthenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/create');
+        $testClient->request('GET', '/tasks/create');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testGetCreateTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('get_create_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('GET', '/tasks/create');
 
-        $crawler = $httpClient->request('GET', '/tasks/create');
-
-        $profile = $blackfireClient->endProbe($probe);
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Title', $crawler->filter('form #task_title')->previousAll()->text());
         $this->assertEquals('', $crawler->filter('form #task_title')->attr('value'));
         $this->assertEquals('Content', $crawler->filter('form #task_content')->previousAll()->text());
         $this->assertEquals('', $crawler->filter('form #task_content')->text());
-
-        $this->outputCost($profile, $profileConfiguration);
     }
 
-    public function testPostCreateTask()
+    public function testPostCreateTaskUnauthenticated()
     {
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/create');
+        $crawler = $testClient->request('GET', '/tasks/create');
 
         $form = $crawler->selectButton('Ajouter')->form();
 
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->submit($form);
+        $crawler = $testClient->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testPostCreateTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/create');
+        $crawler = $testClient->request('GET', '/tasks/create');
 
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => 'Test Task',
             'task[content]' => 'This is a test task.',
         ]);
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('post_create_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->submit($form);
 
-        $crawler = $httpClient->submit($form);
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
-        $profile = $blackfireClient->endProbe($probe);
+        $crawler = $testClient->followRedirect();
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
-
-        $crawler = $httpClient->followRedirect();
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Superbe ! La tâche a été bien été ajoutée.', \trim($crawler->filter('.alert-success')->text()));
         $this->assertEquals('Test Task', \trim($crawler->filter('.task')->last()->filter('h4')->text()));
         $this->assertEquals('This is a test task.', \trim($crawler->filter('.task')->last()->filter('p')->text()));
-        $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
-        //$this->assertEquals('Meli', \trim($crawler->filter('.task')->last()->filter('.author')->text()));
-
-        $this->outputCost($profile, $profileConfiguration);
+        $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->last()->filter('.status span')->attr('class')));
+        $this->assertEquals('Meli', \trim($crawler->filter('.task')->last()->filter('.author')->text()));
     }
 
-    public function testGetEditTask()
+    public function testGetEditTaskUnauthenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/1/edit');
+        $testClient->request('GET', '/tasks/1/edit');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testGetEditTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('get_edit_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('GET', '/tasks/1/edit');
 
-        $crawler = $httpClient->request('GET', '/tasks/1/edit');
-
-        $profile = $blackfireClient->endProbe($probe);
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Title', $crawler->filter('form #task_title')->previousAll()->text());
         $this->assertEquals('Lorem Ipsum', $crawler->filter('form #task_title')->attr('value'));
         $this->assertEquals('Content', $crawler->filter('form #task_content')->previousAll()->text());
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', $crawler->filter('form #task_content')->text());
-
-        $this->outputCost($profile, $profileConfiguration);
     }
 
-    public function testPostEditTask()
+    public function testPostEditTaskUnauthenticated()
     {
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/1/edit');
+        $crawler = $testClient->request('GET', '/tasks/1/edit');
 
         $form = $crawler->selectButton('Modifier')->form();
 
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->submit($form);
+        $crawler = $testClient->submit($form);
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testPostEditTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $crawler = $httpClient->request('GET', '/tasks/1/edit');
+        $crawler = $testClient->request('GET', '/tasks/1/edit');
 
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Updated Test Task',
             'task[content]' => 'This is an updated test task.',
         ]);
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('post_edit_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->submit($form);
 
-        $crawler = $httpClient->submit($form);
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
-        $profile = $blackfireClient->endProbe($probe);
+        $crawler = $testClient->followRedirect();
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
-
-        $crawler = $httpClient->followRedirect();
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Superbe ! La tâche a bien été modifiée.', \trim($crawler->filter('.alert-success')->text()));
         $this->assertEquals('Updated Test Task', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('This is an updated test task.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
-        //$this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
-
-        $this->outputCost($profile, $profileConfiguration);
+        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
-    public function testPostToggleTask()
+    public function testPostToggleTaskUnauthenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('POST', '/tasks/1/toggle');
+        $testClient->request('POST', '/tasks/1/toggle');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testPostToggleTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('post_toggle_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('POST', '/tasks/1/toggle');
 
-        $crawler = $httpClient->request('POST', '/tasks/1/toggle');
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
-        $profile = $blackfireClient->endProbe($probe);
+        $crawler = $testClient->followRedirect();
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
-
-        $crawler = $httpClient->followRedirect();
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Superbe ! La tâche Lorem Ipsum a bien été marquée comme faite.', \trim($crawler->filter('.alert-success')->text()));
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-ok', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
-        //$this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
-
-        $this->outputCost($profile, $profileConfiguration);
+        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
-    public function testPostDeleteTask()
+    public function testPostDeleteTaskUnautenticated()
     {
-        $httpClient = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $httpClient->request('POST', '/tasks/1/delete');
+        $testClient->request('POST', '/tasks/1/delete');
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
 
-        $blackfireClient = $this->createBlackfireClient();
-        $httpClient = static::createClient([], [
-            'PHP_AUTH_USER' => 'Meli',
-            'PHP_AUTH_PW' => 'azerty',
-        ]);
+    public function testPostDeleteTaskAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
 
-        $profileConfiguration = (new ProfileConfiguration())->setTitle('post_toggle_task');
-        $probe = $blackfireClient->createProbe($profileConfiguration);
+        $crawler = $testClient->request('POST', '/tasks/1/delete');
 
-        $crawler = $httpClient->request('POST', '/tasks/1/delete');
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
-        $profile = $blackfireClient->endProbe($probe);
+        $crawler = $testClient->followRedirect();
 
-        $this->assertEquals(Response::HTTP_FOUND, $httpClient->getResponse()->getStatusCode());
-
-        $crawler = $httpClient->followRedirect();
-
-        $this->assertEquals(Response::HTTP_OK, $httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Superbe ! La tâche a bien été supprimée.', \trim($crawler->filter('.alert-success')->text()));
         $this->assertEquals(1, $crawler->filter('.task')->count());
-
-        $this->outputCost($profile, $profileConfiguration);
     }
 }
