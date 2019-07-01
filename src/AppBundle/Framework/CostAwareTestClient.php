@@ -58,7 +58,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function request($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
-        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getKernel()->getRootDir().'\..\.blackfire.ini'));
+        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getKernel()->getRootDir().\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'.blackfire.ini'));
 
         $probe = $blackfireClient->createProbe((new ProfileConfiguration())->setTitle(\sprintf('%s %s', $method, $uri)));
 
