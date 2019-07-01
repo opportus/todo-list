@@ -58,7 +58,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function request($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
-        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getKernel()->getRootDir().\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'.blackfire.ini'));
+        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getBlackfireClientConfigurationFilePath()));
 
         $probe = $blackfireClient->createProbe((new ProfileConfiguration())->setTitle(\sprintf('%s %s', $method, $uri)));
 
@@ -67,5 +67,24 @@ final class CostAwareTestClient extends TestClient
         $this->profile = $blackfireClient->endProbe($probe);
 
         return $crawler;
+    }
+
+    /**
+     * Gets the Blackfire client configuration file path.
+     *
+     * @return string
+     */
+    private function getBlackfireClientConfigurationFilePath(): string
+    {
+        $rootDir = $this->getKernel()->getRootDir();
+        $rootDir = \substr($rootDir, 0, \strrpos($rootDir, \DIRECTORY_SEPARATOR.'app'));
+
+        $path = $rootDir.'.blackfire.ini';
+
+        if (!\file_exists($path)) {
+            throw new \Exception(\sprintf('Blackfire client configuration file "%s" does not exist.', $path));
+        }
+
+        return $path;
     }
 }
