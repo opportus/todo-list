@@ -16,3 +16,4 @@
 /web/bundles/
 /composer.lock
 /.blackfire.ini
+/.blackfire.travis.ini

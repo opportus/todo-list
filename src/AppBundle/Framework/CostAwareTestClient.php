@@ -79,12 +79,6 @@ final class CostAwareTestClient extends TestClient
         $rootDir = $this->getKernel()->getRootDir();
         $rootDir = \substr($rootDir, 0, \strrpos($rootDir, \DIRECTORY_SEPARATOR.'app')+1);
 
-        $path = $rootDir.'.blackfire.ini';
-
-        if (!\file_exists($path)) {
-            throw new \Exception(\sprintf('Blackfire client configuration file "%s" does not exist.', $path));
-        }
-
-        return $path;
+        return $rootDir.'.blackfire.travis.ini';
     }
 }
