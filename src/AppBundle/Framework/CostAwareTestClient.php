@@ -77,7 +77,7 @@ final class CostAwareTestClient extends TestClient
     private function getBlackfireClientConfigurationFilePath(): string
     {
         $rootDir = $this->getKernel()->getRootDir();
-        $rootDir = \substr($rootDir, 0, \strrpos($rootDir, \DIRECTORY_SEPARATOR.'app'));
+        $rootDir = \substr($rootDir, 0, \strrpos($rootDir, \DIRECTORY_SEPARATOR.'app')+1);
 
         $path = $rootDir.'.blackfire.ini';
 
