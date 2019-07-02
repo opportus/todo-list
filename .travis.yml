@@ -5,13 +5,14 @@ matrix:
     env: BLACKFIRE=on
   - php: 7.2
     env: BLACKFIRE=on
+env:
+  global:
+    secure: PamSzq49a9ku5trGlNQzKVEDZanV6tF/iJJbasn0SGHc2KoFWRwYBKRjjClpSvPrQmYowLl1MAgMvcbb2f/lzQ8SGyG4MKsq4Owb+EEfQl6S6AyV260B1GsghS56Wpo0r66z1TQyo4v6qOGvcnStUgOT1diPZ1DEwuutnBd6vPk8IJLR8jovBe2Kl6WPyrmvhDNJknBv+2fvbUFxtbRvm42CrM8l18FiBbnlxDnYG70AuTUI/Y/GrCJSrQkeUWRh9Stba7Uji8LPMr3AO7UWx6Pf302Re/ZhgHrvLqM+LSIZ28FDC/enrRxaUMEopbEvdCMx9OVIThpUfkog87dR8Tg2CLCWfuH+ij6ya1TsyAB+QBU+blh9bGnlqzOdg4HNN49NGTvVhTg7dZiD2wlEBI38d0eXb+zl2e3qjWKyLXmCLVF9ZUOEyaDL4Q8z/l9/znzC127GHrp9g5vH7R77hUj+J6S1oApqi5/wSPVae5Sz+9uMWhzV/JkPjgMXkHdaENS/OyXSOtl1QY1Vw5jfGVIJ7EEVQAETRnsBLM8Z56Zk5e4yFdUaHhFJRCs01uoYw+2WhZcgxAptHfTxeyo6jrjxzfmSMXxMaO1waLhM92nQjex76fWUEkVDyTmIxQTnj10/2Xkq3OPMcGGaQ57w32TIYBh5XUrVKXWwzCUcfqM=
 sudo: false
-cache:
-- "$HOME/.composer/cache/files"
 before_install:
 - |
   if [[ "$BLACKFIRE" = "on" ]]; then
-      openssl aes-256-cbc -k "$blackfire_travis_ini_password" -in .blackfire.travis.ini.enc -out .blackfire.travis.ini -d
+      openssl aes-256-cbc -k $blackfire_travis_ini_password -in .blackfire.travis.ini.enc -out .blackfire.travis.ini -d
       curl -L https://blackfire.io/api/v1/releases/agent/linux/amd64 | tar zxpf -
       chmod 755 agent && ./agent --config=.blackfire.travis.ini --socket=unix:///tmp/blackfire.sock &
   fi
@@ -31,6 +32,3 @@ script:
 - bin/console lint:twig app/Resources/views
 - bin/console security:check
 - bin/console doctrine:schema:validate --skip-sync --no-interaction
-env:
-  global:
-    secure: PamSzq49a9ku5trGlNQzKVEDZanV6tF/iJJbasn0SGHc2KoFWRwYBKRjjClpSvPrQmYowLl1MAgMvcbb2f/lzQ8SGyG4MKsq4Owb+EEfQl6S6AyV260B1GsghS56Wpo0r66z1TQyo4v6qOGvcnStUgOT1diPZ1DEwuutnBd6vPk8IJLR8jovBe2Kl6WPyrmvhDNJknBv+2fvbUFxtbRvm42CrM8l18FiBbnlxDnYG70AuTUI/Y/GrCJSrQkeUWRh9Stba7Uji8LPMr3AO7UWx6Pf302Re/ZhgHrvLqM+LSIZ28FDC/enrRxaUMEopbEvdCMx9OVIThpUfkog87dR8Tg2CLCWfuH+ij6ya1TsyAB+QBU+blh9bGnlqzOdg4HNN49NGTvVhTg7dZiD2wlEBI38d0eXb+zl2e3qjWKyLXmCLVF9ZUOEyaDL4Q8z/l9/znzC127GHrp9g5vH7R77hUj+J6S1oApqi5/wSPVae5Sz+9uMWhzV/JkPjgMXkHdaENS/OyXSOtl1QY1Vw5jfGVIJ7EEVQAETRnsBLM8Z56Zk5e4yFdUaHhFJRCs01uoYw+2WhZcgxAptHfTxeyo6jrjxzfmSMXxMaO1waLhM92nQjex76fWUEkVDyTmIxQTnj10/2Xkq3OPMcGGaQ57w32TIYBh5XUrVKXWwzCUcfqM=
