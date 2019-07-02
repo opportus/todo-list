@@ -1,41 +1,36 @@
 language: php
-
 matrix:
-    include:
-        - php: 5.5
-          env: BLACKFIRE=on
-        - php: 7.2
-          env: BLACKFIRE=on
-
+  include:
+  - php: 5.5
+    env: BLACKFIRE=on
+  - php: 7.2
+    env: BLACKFIRE=on
 sudo: false
-
 cache:
-    - $HOME/.composer/cache/files
-
+- "$HOME/.composer/cache/files"
 before_install:
-    - |
-        if [[ "$BLACKFIRE" = "on" ]]; then
-            openssl aes-256-cbc -K $encrypted_df9dcb7decd5_key -iv $encrypted_df9dcb7decd5_iv -in .blackfire.travis.ini.enc -out .blackfire.travis.ini -d
-            curl -L https://blackfire.io/api/v1/releases/agent/linux/amd64 | tar zxpf -
-            chmod 755 agent && ./agent --config=.blackfire.travis.ini --socket=unix:///tmp/blackfire.sock &
-        fi
-
+- |
+  if [[ "$BLACKFIRE" = "on" ]]; then
+      openssl aes-256-cbc -K $encrypted_df9dcb7decd5_key -iv $encrypted_df9dcb7decd5_iv -in .blackfire.travis.ini.enc -out .blackfire.travis.ini -d
+      curl -L https://blackfire.io/api/v1/releases/agent/linux/amd64 | tar zxpf -
+      chmod 755 agent && ./agent --config=.blackfire.travis.ini --socket=unix:///tmp/blackfire.sock &
+  fi
 install:
-    - travis_retry composer install
-
+- travis_retry composer install
 before_script:
-    - phpenv config-rm xdebug.ini || true
-    - |
-        if [[ "$BLACKFIRE" = "on" ]]; then
-            curl -L https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$(php -r "echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;")-zts | tar zxpf -
-            echo "extension=$(pwd)/$(ls blackfire-*.so | tr -d '[[:space:]]')" > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/blackfire.ini
-            echo "blackfire.agent_socket=unix:///tmp/blackfire.sock" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/blackfire.ini
-        fi
-
+- phpenv config-rm xdebug.ini || true
+- |
+  if [[ "$BLACKFIRE" = "on" ]]; then
+      curl -L https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$(php -r "echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;")-zts | tar zxpf -
+      echo "extension=$(pwd)/$(ls blackfire-*.so | tr -d '[[:space:]]')" > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/blackfire.ini
+      echo "blackfire.agent_socket=unix:///tmp/blackfire.sock" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/blackfire.ini
+  fi
 script:
-    - vendor/bin/phpunit
-    #- vendor/bin/php-cs-fixer fix --diff --dry-run -v
-    - bin/console lint:yaml app/config
-    - bin/console lint:twig app/Resources/views
-    - bin/console security:check
-    - bin/console doctrine:schema:validate --skip-sync --no-interaction
+- vendor/bin/phpunit
+- bin/console lint:yaml app/config
+- bin/console lint:twig app/Resources/views
+- bin/console security:check
+- bin/console doctrine:schema:validate --skip-sync --no-interaction
+env:
+  global:
+    secure: EI7Ecu7LKmme1AQRK/ks5P3RNXO3XXqm+8SppfFQIRQLP8rNmfO/E93G11ipHXVa2dCEcfPjJSS15jbF1OBbMwj5Qh7/jzL7zjx3ZRzKzPQf2PXjDbrgO0pUN/MO7rqIHkDpbAmnPent9Fyh5ryzAX2qjuCqmnHXGwFSF5zmeDoCYu01N50raRFw3NzTGCjDc4+lfEECIy/FDY9+/r1wyF9sb4XVoq7Wi6gK8645EcvXHAsn2o1zTA+kw3/AjiPaOzH9djpemeA3a3Z5Pr6ekGQ/fVcrAvJCLLu3cgCnbVwqUj3NiBzgN7w8C0MpKMqNG6DfIbSXRSD+cGbe5Y9nUtKvb0I1Hjht+m+bmm19aQkRmOHF3PvEzRYPnipldqoHfEI9QYPC+JvvZb3ej0AVOPRuvL3KJUlN2tT7t2KID8601fLPoB2/v+sLyh8Mkkuh+ofj2cemqgu4UhUWfDQ/SqApGgfcfSFIJfF8VpEZ4h+5n8z2K/c0oHK278dhhnDD+THgjZGHDDAmHqVV9+kt+fQ+UvpIbFW/2aUMiqs8aMFi4JE/Z3OxMJXA3T5E0eLgsPecyCXimn6d1mZ5/z7xX7vfLsRW/hTtStf+MlgzahSlEI9PWU31tpmNpN8Qa4L1sn654/qB2ZTtrSQwm8HilHMppssaqGaTfOsXITXFVGA=
