@@ -9,6 +9,8 @@ use Blackfire\Profile\Configuration as ProfileConfiguration;
 use Blackfire\Profile\Cost;
 use Symfony\Bundle\FrameworkBundle\Client as TestClient;
 use Symfony\Component\BrowserKit\Exception\BadMethodCallException;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Form;
 
 /**
  * The cost aware test client.
@@ -24,6 +26,11 @@ final class CostAwareTestClient extends TestClient
     private $profile;
 
     /**
+     * @var ProfileConfiguration $profileConfiguration
+     */
+    private $profileConfiguration;
+
+    /**
      * Gets the current cost.
      *
      * @return Cost
@@ -32,7 +39,7 @@ final class CostAwareTestClient extends TestClient
     public function getCost(): Cost
     {
         if (null === $this->profile) {
-            throw new BadMethodCallException(\sprintf('The "request()" method must be called before "%s()".', __METHOD__));
+            throw new BadMethodCallException(\sprintf('The "requestAndProfile()" or "submitAndProfile()" method must be called before "%s()".', __METHOD__));
         }
 
         return $this->profile->getMainCost();
@@ -54,15 +61,49 @@ final class CostAwareTestClient extends TestClient
     }
 
     /**
-     * {@inheritdoc}
+     * Requests and profiles.
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null|string $content
+     * @param boolean $changeHistory
+     * @return Crawler
      */
-    public function request($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    public function requestAndProfile($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
         $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getBlackfireClientConfigurationFilePath()));
+        $this->profileConfiguration = new ProfileConfiguration();
+        $this->profileConfiguration->setTitle(\sprintf('%s %s', $method, $uri));
 
-        $probe = $blackfireClient->createProbe((new ProfileConfiguration())->setTitle(\sprintf('%s %s', $method, $uri)));
+        $probe = $blackfireClient->createProbe($this->profileConfiguration);
 
         $crawler = parent::request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+
+        $this->profile = $blackfireClient->endProbe($probe);
+
+        return $crawler;
+    }
+
+    /**
+     * Submits and profiles.
+     *
+     * @param Form $form
+     * @param array $values
+     * @param array $serverParameters
+     * @return Crawler
+     */
+    public function submitAndProfile(Form $form, array $values = [], array $serverParameters = [])
+    {
+        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getBlackfireClientConfigurationFilePath()));
+        $this->profileConfiguration = new ProfileConfiguration();
+        $this->profileConfiguration->setTitle(\sprintf('%s %s', $form->getMethod(), $form->getUri()));
+
+        $probe = $blackfireClient->createProbe($this->profileConfiguration);
+
+        $crawler = parent::submit($form, $values, $serverParameters);
 
         $this->profile = $blackfireClient->endProbe($probe);
 

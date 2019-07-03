@@ -2,10 +2,10 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Framework\Test\CostAwareWebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultControllerTest extends CostAwareWebTestCase
+class DefaultControllerTest extends WebTestCase
 {
     use ControllerTestTrait;
 

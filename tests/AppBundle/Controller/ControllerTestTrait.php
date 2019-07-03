@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Framework\CostAwareTestClient;
+use Symfony\Bundle\FrameworkBundle\Client as TestClient;
 
 /**
  * The controller test trait.
@@ -12,13 +12,12 @@ use AppBundle\Framework\CostAwareTestClient;
  */
 trait ControllerTestTrait
 {
-
     /**
      * Creates an unauthenticated test client.
      *
-     * @return CostAwareTestClient
+     * @return TestClient
      */
-    private function createUnauthenticatedTestClient(): CostAwareTestClient
+    private function createUnauthenticatedTestClient(): TestClient
     {
         return static::createClient();
     }
@@ -26,9 +25,9 @@ trait ControllerTestTrait
     /**
      * Creates an authenticated test client.
      *
-     * @return CostAwareTestClient
+     * @return TestClient
      */
-    private function createAuthenticatedTestClient(): CostAwareTestClient
+    private function createAuthenticatedTestClient(): TestClient
     {
         return static::createClient([], [
             'PHP_AUTH_USER' => 'Meli',
