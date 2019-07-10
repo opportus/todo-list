@@ -1,0 +1,3 @@
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-fpm-alpine3.10
+COPY . /app

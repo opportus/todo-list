@@ -1,0 +1,33 @@
+version: "3.6"
+services:
+  nginx:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/nginx/Dockerfile
+    volumes:
+      - /home/docker/src/todo-list:/app
+    ports:
+      - 80:80
+    links:
+      - php:php
+  php:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/php/Dockerfile
+      args:
+        - PHP_VERSION
+    volumes:
+      - /home/docker/src/todo-list:/app
+    links:
+      - mariadb:mariadb
+  mariadb:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/mariadb/Dockerfile
+    volumes:
+      - ./mariadb/database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=todo_list
+      - MYSQL_USER=todo_list
+      - MYSQL_PASSWORD=todo_list
