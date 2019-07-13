@@ -3,9 +3,7 @@ services:
   nginx:
     build:
       context: ./../..
-      dockerfile: ./docker/dev/nginx/Dockerfile
-    volumes:
-      - ./../..:/app
+      dockerfile: ./docker/test/nginx/Dockerfile
     ports:
       - 80:80
     depends_on:
@@ -14,15 +12,13 @@ services:
   php:
     build:
       context: ./../..
-      dockerfile: ./docker/dev/php/Dockerfile
-    volumes:
-      - ./../..:/app
+      dockerfile: ./docker/test/php/Dockerfile
     depends_on:
       - mariadb
   mariadb:
     build:
       context: ./../..
-      dockerfile: ./docker/dev/mariadb/Dockerfile
+      dockerfile: ./docker/test/mariadb/Dockerfile
     volumes:
       - database:/var/lib/mysql
     ports:

@@ -1,0 +1,32 @@
+version: "3.6"
+services:
+  nginx:
+    build:
+      context: ./../..
+      dockerfile: ./docker/prod/nginx/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb
+      - php
+  php:
+    build:
+      context: ./../..
+      dockerfile: ./docker/prod/php/Dockerfile
+    depends_on:
+      - mariadb
+  mariadb:
+    build:
+      context: ./../..
+      dockerfile: ./docker/prod/mariadb/Dockerfile
+    volumes:
+      - database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    #environment:
+    #  - MYSQL_ROOT_PASSWORD=root
+    #  - MYSQL_DATABASE=todo_list
+    #  - MYSQL_USER=todo_list
+    #  - MYSQL_PASSWORD=todo_list
+volumes:
+  database:
