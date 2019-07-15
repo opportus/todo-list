@@ -8,9 +8,9 @@ before_install:
 - docker run -ti -v "${TRAVIS_BUILD_DIR}/docker/test/mariadb:/wd" frapsoft/openssl enc -d -aes-256-cbc -kfile /wd/.secret.env.enc.key -in wd/.secret.env.enc -out wd/.secret.env
 - docker run -ti -v "${TRAVIS_BUILD_DIR}/docker/test/blackfire:/wd" frapsoft/openssl enc -d -aes-256-cbc -kfile /wd/.secret.env.enc.key -in wd/.secret.env.enc -out wd/.secret.env
 install:
-- composer install
-- echo "127.0.0.1 mariadb" >> /etc/hostname
 - cd docker/test && docker-compose up -d
+- echo "127.0.0.1 mariadb" >> /etc/hostname
+- composer install
 before_script:
 - phpenv config-rm xdebug.ini || true
 - docker exec -ti todo_list_test_php_1 /bin/sh
