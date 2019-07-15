@@ -1,6 +1,7 @@
 language: php
 services:
   - docker
+sudo: false
 before_install:
 - openssl aes-256-cbc -K $encrypted_b93f56ee5fe5_key -iv $encrypted_b93f56ee5fe5_iv -in docker/test/mariadb/.secret.env.enc.key.enc -out docker/test/mariadb/.secret.env.enc.key -d
 - openssl aes-256-cbc -K $encrypted_919edf534848_key -iv $encrypted_919edf534848_iv -in docker/test/blackfire/.secret.env.enc.key.enc -out docker/test/blackfire/.secret.env.enc.key -d
@@ -11,10 +12,10 @@ install:
 - docker exec -t todolisttest_php_1 /bin/sh -c "apk add --no-cache composer"
 - docker exec -t todolisttest_php_1 /bin/sh -c "cd /app && composer install"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:schema:create"
-- docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:fixtures:load"
+- docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:fixtures:load --no-interaction"
 script:
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/vendor/bin/phpunit"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:yaml app/config"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:twig app/Resources/views"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console security:check"
-- docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:schema:validate --skip-sync --no-interaction"
+- docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:schema:validate --no-interaction --skip-sync"
