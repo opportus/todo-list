@@ -2,12 +2,14 @@ language: php
 services:
   - docker
 sudo: false
+addons:
+  hosts:
+    - mariadb
 before_install:
 - openssl aes-256-cbc -K $encrypted_b93f56ee5fe5_key -iv $encrypted_b93f56ee5fe5_iv -in docker/test/mariadb/.secret.env.enc.key.enc -out docker/test/mariadb/.secret.env.enc.key -d
 - openssl aes-256-cbc -K $encrypted_919edf534848_key -iv $encrypted_919edf534848_iv -in docker/test/blackfire/.secret.env.enc.key.enc -out docker/test/blackfire/.secret.env.enc.key -d
 - docker run -ti -v "${TRAVIS_BUILD_DIR}/docker/test/mariadb:/wd" frapsoft/openssl enc -d -aes-256-cbc -kfile /wd/.secret.env.enc.key -in wd/.secret.env.enc -out wd/.secret.env
 - docker run -ti -v "${TRAVIS_BUILD_DIR}/docker/test/blackfire:/wd" frapsoft/openssl enc -d -aes-256-cbc -kfile /wd/.secret.env.enc.key -in wd/.secret.env.enc -out wd/.secret.env
-- sudo echo "127.0.0.1 mariadb" >> /etc/hostname
 install:
 - cd docker/test && docker-compose up -d
 - composer install
