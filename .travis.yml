@@ -12,20 +12,10 @@ before_install:
 - docker run -ti -v "${TRAVIS_BUILD_DIR}/docker/test/blackfire:/wd" frapsoft/openssl enc -d -aes-256-cbc -kfile /wd/.secret.env.enc.key -in wd/.secret.env.enc -out wd/.secret.env
 install:
 - cd docker/test && docker-compose up -d
-- docker ps
-- docker exec -ti todolisttest_php_1 /bin/sh
-- cd /app
-- php -r 'copy("https://getcomposer.org/installer", "composer-setup.php");'
-- php -r 'if (hash_file("sha384", "composer-setup.php") === "48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5") { echo "Installer verified"; } else { echo "Installer corrupt"; unlink("composer-setup.php"); } echo PHP_EOL;'
-- php composer-setup.php
-- php -r 'unlink("composer-setup.php");'
-- composer install -vvv
-before_script:
-- docker exec -ti todo_list_test_php_1 /bin/sh
-- cd /app
+- docker exec -t todolisttest_php_1 /bin/sh -c "apk add --no-cache composer && cd /app && composer install -vvv"
 script:
-- vendor/bin/phpunit
-- bin/console lint:yaml app/config
-- bin/console lint:twig app/Resources/views
-- bin/console security:check
-- bin/console doctrine:schema:validate --skip-sync --no-interaction
+- docker exec -t todolisttest_php_1 /bin/sh -c "vendor/bin/phpunit"
+- docker exec -t todolisttest_php_1 /bin/sh -c "bin/console lint:yaml app/config"
+- docker exec -t todolisttest_php_1 /bin/sh -c "bin/console lint:twig app/Resources/views"
+- docker exec -t todolisttest_php_1 /bin/sh -c "bin/console security:check"
+- docker exec -t todolisttest_php_1 /bin/sh -c "doctrine:schema:validate --skip-sync --no-interaction"
