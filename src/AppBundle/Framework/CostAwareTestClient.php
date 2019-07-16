@@ -74,7 +74,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function requestAndProfile($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
-        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getBlackfireClientConfigurationFilePath()));
+        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration(\getenv('BLACKFIRE_CLIENT_ID'), \getenv('BLACKFIRE_CLIENT_TOKEN')));
         $this->profileConfiguration = new ProfileConfiguration();
         $this->profileConfiguration->setTitle(\sprintf('%s %s', $method, $uri));
 
@@ -97,7 +97,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function submitAndProfile(Form $form, array $values = [], array $serverParameters = [])
     {
-        $blackfireClient = new BlackfireClient(BlackfireClientConfiguration::createFromFile($this->getBlackfireClientConfigurationFilePath()));
+        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration(\getenv('BLACKFIRE_CLIENT_ID'), \getenv('BLACKFIRE_CLIENT_TOKEN')));
         $this->profileConfiguration = new ProfileConfiguration();
         $this->profileConfiguration->setTitle(\sprintf('%s %s', $form->getMethod(), $form->getUri()));
 
@@ -108,18 +108,5 @@ final class CostAwareTestClient extends TestClient
         $this->profile = $blackfireClient->endProbe($probe);
 
         return $crawler;
-    }
-
-    /**
-     * Gets the Blackfire client configuration file path.
-     *
-     * @return string
-     */
-    private function getBlackfireClientConfigurationFilePath(): string
-    {
-        $rootDir = $this->getKernel()->getRootDir();
-        $rootDir = \substr($rootDir, 0, \strrpos($rootDir, \DIRECTORY_SEPARATOR.'app')+1);
-
-        return $rootDir.'.blackfire.travis.ini';
     }
 }

@@ -15,6 +15,9 @@ services:
       dockerfile: ./docker/test/php/Dockerfile
     depends_on:
       - mariadb
+      - blackfire
+    env_file:
+      - blackfire/.secret.env
   mariadb:
     build:
       context: ./../..
@@ -29,8 +32,6 @@ services:
     build:
       context: ./../..
       dockerfile: ./docker/dev/blackfire/Dockerfile
-    depends_on:
-      - php
     env_file:
       - blackfire/.secret.env
 volumes:
