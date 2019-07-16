@@ -52,6 +52,9 @@ final class CostAwareTestClient extends TestClient
     {
         $cost = $this->getCost();
 
+        \fwrite(\STDERR, \sprintf('%s', \PHP_EOL));
+        \fwrite(\STDERR, '------------------------------------------');
+        \fwrite(\STDERR, \sprintf('%s', \PHP_EOL));
         \fwrite(\STDERR, \sprintf('"%s" profile:', $this->profileConfiguration->getTitle()));
         \fwrite(\STDERR, \sprintf('%s', \PHP_EOL.\PHP_EOL));
         \fwrite(\STDERR, \sprintf('Wall Time:    %d ms', \round($cost->getWallTime()/1000)));
