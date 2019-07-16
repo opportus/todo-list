@@ -1,12 +1,7 @@
 language: php
 services:
   - docker
-sudo: false
-addons:
-  hosts:
-    - mariadb
 before_install:
-- cat /etc/hosts
 - openssl aes-256-cbc -K $encrypted_b93f56ee5fe5_key -iv $encrypted_b93f56ee5fe5_iv -in docker/test/mariadb/.secret.env.enc.key.enc -out docker/test/mariadb/.secret.env.enc.key -d
 - openssl aes-256-cbc -K $encrypted_919edf534848_key -iv $encrypted_919edf534848_iv -in docker/test/blackfire/.secret.env.enc.key.enc -out docker/test/blackfire/.secret.env.enc.key -d
 - openssl aes-256-cbc -kfile docker/test/mariadb/.secret.env.enc.key -in docker/test/mariadb/.secret.env.enc -out docker/test/mariadb/.secret.env -d
