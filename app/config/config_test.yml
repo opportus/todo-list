@@ -23,7 +23,7 @@ doctrine:
     dbal:
         driver:   pdo_mysql
         host:     mariadb
-        port:     3603
+        port:     3306
         dbname:   todo_list
         user:     todo_list
         password: todo_list
