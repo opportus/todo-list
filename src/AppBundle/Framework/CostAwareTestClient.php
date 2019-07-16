@@ -74,7 +74,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function requestAndProfile($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
-        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration(\getenv('BLACKFIRE_CLIENT_ID'), \getenv('BLACKFIRE_CLIENT_TOKEN')));
+        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration());
         $this->profileConfiguration = new ProfileConfiguration();
         $this->profileConfiguration->setTitle(\sprintf('%s %s', $method, $uri));
 
@@ -97,7 +97,7 @@ final class CostAwareTestClient extends TestClient
      */
     public function submitAndProfile(Form $form, array $values = [], array $serverParameters = [])
     {
-        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration(\getenv('BLACKFIRE_CLIENT_ID'), \getenv('BLACKFIRE_CLIENT_TOKEN')));
+        $blackfireClient = new BlackfireClient(new BlackfireClientConfiguration());
         $this->profileConfiguration = new ProfileConfiguration();
         $this->profileConfiguration->setTitle(\sprintf('%s %s', $form->getMethod(), $form->getUri()));
 

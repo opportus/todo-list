@@ -13,5 +13,7 @@ class DefaultControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/');
+
+        $testClient->outputCost();
     }
 }

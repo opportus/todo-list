@@ -13,6 +13,8 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/tasks');
+
+        $testClient->outputCost();
     }
 
     public function testGetCreateTaskAuthenticated()
@@ -20,6 +22,8 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/tasks/create');
+
+        $testClient->outputCost();
     }
 
     public function testPostCreateTaskAuthenticated()
@@ -33,7 +37,9 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
             'task[content]' => 'This is a test task.',
         ]);
 
-        $crawler = $testClient->submitAndProfile($form);
+        $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 
     public function testGetEditTaskAuthenticated()
@@ -41,6 +47,8 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/tasks/1/edit');
+
+        $testClient->outputCost();
     }
 
     public function testPostEditTaskAuthenticated()
@@ -55,6 +63,8 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         ]);
 
         $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 
     public function testPostToggleTaskAuthenticated()
@@ -62,6 +72,8 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('POST', '/tasks/1/toggle');
+
+        $testClient->outputCost();
     }
 
     public function testPostDeleteTaskAuthenticated()
@@ -69,5 +81,7 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createAuthenticatedTestClient();
 
         $testClient->requestAndProfile('POST', '/tasks/1/delete');
+
+        $testClient->outputCost();
     }
 }

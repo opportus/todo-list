@@ -13,6 +13,8 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createUnauthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/users');
+
+        $testClient->outputCost();
     }
 
     public function testGetCreateUser()
@@ -20,6 +22,8 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createUnauthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/users/create');
+
+        $testClient->outputCost();
     }
 
     public function testPostCreateUserInvalid()
@@ -36,7 +40,9 @@ class UserControllerPerfTest extends CostAwareWebTestCase
             'user[role]' => 'ROLE_ADMIN',
         ]);
 
-        $crawler = $testClient->submitAndProfile($form);
+        $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 
     public function testPostCreateUserValid()
@@ -53,14 +59,18 @@ class UserControllerPerfTest extends CostAwareWebTestCase
             'user[role]' => 'ROLE_USER',
         ]);
 
-        $crawler = $testClient->submitAndProfile($form);
+        $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 
     public function testGetEditUser()
     {
         $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $testClient->requestAndProfile('GET', '/users/1/edit');
+        $testClient->requestAndProfile('GET', '/users/1/edit');
+
+        $testClient->outputCost();
     }
 
     public function testPostEditUserInvalid()
@@ -77,7 +87,9 @@ class UserControllerPerfTest extends CostAwareWebTestCase
             'user[role]' => 'ROLE_USER',
         ]);
 
-        $crawler = $testClient->submitAndProfile($form);
+        $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 
     public function testPostEditUserValid()
@@ -94,6 +106,8 @@ class UserControllerPerfTest extends CostAwareWebTestCase
             'user[role]' => 'ROLE_USER',
         ]);
 
-        $crawler = $testClient->submitAndProfile($form);
+        $testClient->submitAndProfile($form);
+
+        $testClient->outputCost();
     }
 }
