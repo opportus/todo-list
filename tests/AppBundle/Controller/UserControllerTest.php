@@ -19,10 +19,10 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Liste des utilisateurs', $crawler->filter('.container h1')->text());
         $this->assertEquals('Meli', \trim($crawler->filter('table tbody tr')->eq(0)->filter('td')->eq(0)->text()));
         $this->assertEquals('meli@example.com', \trim($crawler->filter('table tbody tr')->eq(0)->filter('td')->eq(1)->text()));
-        $this->assertEquals('Admin', \trim($crawler->filter('table tbody tr')->eq(0)->filter('td')->eq(2)->text()));
+        $this->assertEquals('Administrateur', \trim($crawler->filter('table tbody tr')->eq(0)->filter('td')->eq(2)->text()));
         $this->assertEquals('Melo', \trim($crawler->filter('table tbody tr')->eq(1)->filter('td')->eq(0)->text()));
         $this->assertEquals('melo@example.com', \trim($crawler->filter('table tbody tr')->eq(1)->filter('td')->eq(1)->text()));
-        $this->assertEquals('User', \trim($crawler->filter('table tbody tr')->eq(1)->filter('td')->eq(2)->text()));
+        $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->eq(1)->filter('td')->eq(2)->text()));
     }
 
     public function testGetCreateUser()
@@ -42,7 +42,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Adresse email', $crawler->filter('form #user_email')->previousAll()->text());
         $this->assertEquals('', $crawler->filter('form #user_email')->attr('value'));
         $this->assertEquals('Role', $crawler->filter('form #user_role')->previousAll()->text());
-        $this->assertEquals('', $crawler->filter('form #user_role')->attr('value'));
+        $this->assertEquals('', $crawler->filter('form #user_role')->first()->text('value'));
     }
 
     public function testPostCreateUserInvalid()
@@ -91,7 +91,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Liste des utilisateurs', $crawler->filter('.container h1')->text());
         $this->assertEquals('Allo', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(0)->text()));
         $this->assertEquals('allo@example.com', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(1)->text()));
-        $this->assertEquals('User', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
+        $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
     }
 
     public function testGetEditUser()
@@ -111,7 +111,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Adresse email', $crawler->filter('form #user_email')->previousAll()->text());
         $this->assertEquals('meli@example.com', $crawler->filter('form #user_email')->attr('value'));
         $this->assertEquals('Role', $crawler->filter('form #user_role')->previousAll()->text());
-        $this->assertEquals('ROLE_ADMIN', $crawler->filter('form #user_role')->attr('value'));
+        $this->assertEquals('Administrateur', $crawler->filter('form #user_role')->first()->text());
     }
 
     public function testPostEditUserInvalid()
@@ -160,6 +160,6 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Liste des utilisateurs', $crawler->filter('.container h1')->text());
         $this->assertEquals('Allo', \trim($crawler->filter('table tbody tr')->first()->filter('td')->eq(0)->text()));
         $this->assertEquals('allo@example.com', \trim($crawler->filter('table tbody tr')->first()->filter('td')->eq(1)->text()));
-        $this->assertEquals('User', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
+        $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
     }
 }

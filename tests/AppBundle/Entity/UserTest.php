@@ -7,6 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
+    public function testConstruct()
+    {
+        $user = new User();
+        
+        $this->assertEquals([User::ROLE_USER], $user->getRoles());
+    }
+
     public function testSetUsername()
     {
         $user = new User();
@@ -34,11 +41,18 @@ class UserTest extends TestCase
         $this->assertEquals('azerty', $user->getPassword());
     }
 
-    public function testGetRoles()
+    public function testSetRole()
     {
         $user = new User();
-        $roles = ['ROLE_USER'];
-        
-        $this->assertEquals($roles, $user->getRoles());
+
+        $user->setRole(User::ROLE_USER);
+
+        $this->AssertEquals([User::ROLE_USER], $user->getRoles());
+        $this->AssertEquals('Utilisateur', $user->getRole());
+
+        $user->setRole(User::ROLE_ADMIN);
+
+        $this->assertEquals([User::ROLE_USER, User::ROLE_ADMIN], $user->getRoles());
+        $this->assertEquals('Administrateur', $user->getRole());
     }
 }
