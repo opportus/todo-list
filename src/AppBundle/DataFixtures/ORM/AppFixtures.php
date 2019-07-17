@@ -15,34 +15,47 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $entityManager)
     {
-        foreach ($this->generateData() as $entitiesType => $entitiesData) {
-            foreach ($entitiesData as $entityData) {
-                $entity = new $entitiesType();
+        $users = [];
+        foreach ($this->generateUserData() as $userData) {
+            $users[] = $user = new User();
 
-                foreach ($entityData as $setter => $arguments) {
-                    $entity->{$setter}(...(array)$arguments);
-                }
-
-                $entityManager->persist($entity);
+            foreach ($userData as $setter => $arguments) {
+                $user->{$setter}(...(array)$arguments);
             }
+
+            $entityManager->persist($user);
+        }
+
+        $entityManager->flush();
+
+        foreach ($this->generateTaskData($users) as $taskData) {
+            $task = new Task();
+
+            foreach ($taskData as $setter => $argument) {
+                $task->{$setter}($argument);
+            }
+
+            $entityManager->persist($task);
         }
 
         $entityManager->flush();
     }
 
-    private function generateData()
+    private function generateUserData()
     {
         $password = $this->container->get('security.password_encoder')->encodePassword(new User(), 'azerty');
 
         return [
-            User::class => [
-                ['setUsername' => 'Meli', 'setEmail' => 'meli@example.com', 'setPassword' => $password],
-                ['setUsername' => 'Melo', 'setEmail' => 'melo@example.com', 'setPassword' => $password],
-            ],
-            Task::class => [
-                ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
-                ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.']
-            ],
+            ['setUsername' => 'Meli', 'setEmail' => 'meli@example.com', 'setPassword' => $password],
+            ['setUsername' => 'Melo', 'setEmail' => 'melo@example.com', 'setPassword' => $password],
+        ];
+    }
+
+    private function generateTaskData($users)
+    {
+        return [
+            ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'setAuthor' => $users[0]],
+            ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'setAuthor' => $users[1]]
         ];
     }
 }

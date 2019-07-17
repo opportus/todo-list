@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -9,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table
  */
-class Task
+class Task implements AuthorableInterface
 {
     /**
      * @ORM\Column(type="integer")
@@ -39,6 +40,16 @@ class Task
      * @ORM\Column(type="boolean")
      */
     private $isDone;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    private $author;
 
     public function __construct()
     {
@@ -89,5 +100,21 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAuthor(User $author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAuthor(): ?User
+    {
+        return $this->author;
     }
 }

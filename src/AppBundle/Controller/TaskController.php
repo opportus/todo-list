@@ -24,7 +24,7 @@ class TaskController extends Controller
     public function createAction(Request $request)
     {
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, ['user' => $this->getUser()]);
 
         $form->handleRequest($request);
 
@@ -47,7 +47,7 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, ['user' => $this->getUser()]);
 
         $form->handleRequest($request);
 

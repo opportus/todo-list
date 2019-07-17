@@ -28,12 +28,12 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(2, $crawler->filter('.task')->count());
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
-        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author span')->text()));
+        $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(1)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(1)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(1)->filter('.status span')->attr('class')));
-        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(1)->filter('.author span')->text()));
+        $this->assertEquals('Auteur: Melo', \trim($crawler->filter('.task')->eq(1)->filter('.author')->text()));
     }
 
     public function testGetCreateTaskUnauthenticated()
@@ -95,7 +95,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Test Task', \trim($crawler->filter('.task')->last()->filter('h4')->text()));
         $this->assertEquals('This is a test task.', \trim($crawler->filter('.task')->last()->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->last()->filter('.status span')->attr('class')));
-        $this->assertEquals('Meli', \trim($crawler->filter('.task')->last()->filter('.author')->text()));
+        $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->last()->filter('.author')->text()));
     }
 
     public function testGetEditTaskUnauthenticated()
@@ -157,7 +157,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Updated Test Task', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('This is an updated test task.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-remove', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
-        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
+        $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
     public function testPostToggleTaskUnauthenticated()
@@ -184,7 +184,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Lorem Ipsum', \trim($crawler->filter('.task')->eq(0)->filter('h4')->text()));
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', \trim($crawler->filter('.task')->eq(0)->filter('p')->text()));
         $this->assertEquals('glyphicon glyphicon-ok', \trim($crawler->filter('.task')->eq(0)->filter('.status span')->attr('class')));
-        $this->assertEquals('Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
+        $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
     public function testPostDeleteTaskUnautenticated()
