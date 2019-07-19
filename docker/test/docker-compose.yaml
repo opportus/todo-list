@@ -5,7 +5,7 @@ services:
       context: ./../..
       dockerfile: ./docker/test/nginx/Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - mariadb
       - php
