@@ -46,8 +46,8 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $password = $this->container->get('security.password_encoder')->encodePassword(new User(), 'azerty');
 
         return [
-            ['setUsername' => 'Meli', 'setEmail' => 'meli@example.com', 'setPassword' => $password, 'setRoles' => User::ROLE_ADMIN],
-            ['setUsername' => 'Melo', 'setEmail' => 'melo@example.com', 'setPassword' => $password, 'setRoles' => User::ROLE_USER],
+            ['setUsername' => 'Meli', 'setEmail' => 'meli@example.com', 'setPassword' => $password, 'setRole' => User::ROLE_ADMIN],
+            ['setUsername' => 'Melo', 'setEmail' => 'melo@example.com', 'setPassword' => $password, 'setRole' => User::ROLE_USER],
         ];
     }
 
