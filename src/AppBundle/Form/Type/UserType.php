@@ -15,7 +15,13 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentUserRoles = $builder->getData()->getRoles();
+        $data = $builder->getData();
+
+        if (null !== $data && $data instanceof User) {
+            $currentUserRoles = $builder->getData()->getRoles();
+        } else {
+            $currentUserRoles = [User::ROLE_USER];
+        }
 
         $builder
             ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
@@ -32,7 +38,7 @@ class UserType extends AbstractType
                     'Utilisateur'    => User::ROLE_USER,
                     'Administrateur' => User::ROLE_ADMIN
                 ],
-                'preferred_choices' => [\in_array(User::ROLE_ADMIN, $currentUserRoles) ? User::ROLE_ADMIN : User::ROLE_USER]
+                'preferred_choices' => [$currentUserRoles]
             ])
         ;
     }
