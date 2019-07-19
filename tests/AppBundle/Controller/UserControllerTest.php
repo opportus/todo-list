@@ -111,7 +111,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Adresse email', $crawler->filter('form #user_email')->previousAll()->text());
         $this->assertEquals('meli@example.com', $crawler->filter('form #user_email')->attr('value'));
         $this->assertEquals('Role', $crawler->filter('form #user_role')->previousAll()->text());
-        $this->assertEquals('Administrateur', $crawler->filter('form #user_role option')->first()->text());
+        $this->assertEquals('Utilisateur', $crawler->filter('form #user_role option')->first()->text());
     }
 
     public function testPostEditUserInvalid()
