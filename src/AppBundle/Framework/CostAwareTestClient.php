@@ -8,7 +8,6 @@ use Blackfire\Profile;
 use Blackfire\Profile\Configuration as ProfileConfiguration;
 use Blackfire\Profile\Cost;
 use Symfony\Bundle\FrameworkBundle\Client as TestClient;
-use Symfony\Component\BrowserKit\Exception\BadMethodCallException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 
@@ -34,12 +33,12 @@ final class CostAwareTestClient extends TestClient
      * Gets the current cost.
      *
      * @return Cost
-     * @throws Exception
+     * @throws \BadMethodCallException
      */
     public function getCost(): Cost
     {
         if (null === $this->profile) {
-            throw new BadMethodCallException(\sprintf('The "requestAndProfile()" or "submitAndProfile()" method must be called before "%s()".', __METHOD__));
+            throw new \BadMethodCallException(\sprintf('The "requestAndProfile()" or "submitAndProfile()" method must be called before "%s()".', __METHOD__));
         }
 
         return $this->profile->getMainCost();
