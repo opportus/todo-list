@@ -16,10 +16,15 @@ class AuthorizerListener
     /**
      * Authorizes the data on form submit.
      *
-     * @param Symfony\Component\Form\FormEvent $event
+     * @param FormEvent $event
+     * @param null|User
      */
-    public function onFormSubmit(FormEvent $event, User $user)
+    public function onFormSubmit(FormEvent $event, ?User $user)
     {
+        if (null === $user) {
+            return;
+        }
+
         $authorable = $event->getData();
 
         if (!\is_object($authorable) || !$authorable instanceof AuthorableInterface) {
@@ -31,10 +36,6 @@ class AuthorizerListener
         $authorableAccessMethods = ['POST'];
 
         if (!\in_array($accessMethod, $authorableAccessMethods)) {
-            return;
-        }
-
-        if (null === $user) {
             return;
         }
 
