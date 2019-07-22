@@ -2,9 +2,7 @@
 
 namespace AppBundle\Framework\Test;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * The cost aware web test case.
@@ -21,7 +19,7 @@ class CostAwareWebTestCase extends WebTestCase
     {
         static::bootKernel($options);
 
-        $client = static::$kernel->getContainer()->get('app.cost_aware_test_client');
+        $client = static::$kernel->getContainer()->get('AppBundle\Framework\CostAwareTestClient');
 
         $client->setServerParameters($server);
 

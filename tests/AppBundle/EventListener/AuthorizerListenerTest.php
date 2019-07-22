@@ -16,7 +16,7 @@ class AuthorizerListenerTest extends TestCase
     private $user;
     private $task;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->authorizerListener = new AuthorizerListener();
 

@@ -7,9 +7,12 @@ use AppBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AppFixtures extends Fixture implements ContainerAwareInterface
 {
+    private $container;
+
     /**
      * {@inheritDoc}
      */
@@ -57,5 +60,13 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
             ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'setAuthor' => $users[0]],
             ['setTitle' => 'Lorem Ipsum', 'setContent' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'setAuthor' => $users[1]]
         ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 }
