@@ -8,9 +8,9 @@ class DefaultControllerPerfTest extends CostAwareWebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetHomepageAuthenticated()
+    public function testGetHomepageWithUserRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
 
         $testClient->requestAndProfile('GET', '/');
     }
