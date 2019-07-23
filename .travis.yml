@@ -16,5 +16,4 @@ script:
 - docker exec -t todolisttest_php_1 /bin/sh -c "cd /app && phpdbg -qrr vendor/bin/phpunit --coverage-text --strict-coverage --enforce-time-limit --strict-global-state"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:yaml /app/app/config"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:twig /app/app/Resources/views"
-- docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console security:check"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:schema:validate --no-interaction --skip-sync"
