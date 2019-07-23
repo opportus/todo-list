@@ -17,3 +17,4 @@
 /.blackfire.travis.ini
 /docker/*/*/.secret.env.enc.key
 /docker/*/*/.secret.env
+/.phpunit.result.cache
