@@ -196,6 +196,15 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
+    public function testPostDeleteTaskWithAdminRoleException()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
+
+        $crawler = $testClient->request('POST', '/tasks/2/delete');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
     public function testPostDeleteTaskWithAdminRole()
     {
         $testClient = $this->createTestClientWithAdminRole();

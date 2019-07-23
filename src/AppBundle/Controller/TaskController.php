@@ -7,9 +7,21 @@ use AppBundle\Form\Type\TaskType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TaskController extends Controller
 {
+    /**
+     * @var AuthorizationCheckerInterface $authorizationChecker
+     */
+    private $authorizationChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
     /**
      * @Route("/tasks", name="task_list")
      */
@@ -83,6 +95,10 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
+        if (false === $this->authorizationChecker->isGranted('DELETE', $task)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
