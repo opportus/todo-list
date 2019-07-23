@@ -4,6 +4,29 @@ parameters:
 #    parameter_name: value
 
 services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    AppBundle\:
+        resource: '../../src/AppBundle/*'
+        exclude: '../../src/AppBundle/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller'
+        tags: ['controller.service_arguments']
+
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    AppBundle\Framework\CostAwareTestClient:
+        public: true
+
+    #AppBundle\DataFixtures\ORM\AppFixtures:
+    #    tags: [doctrine.fixture.orm]

@@ -3,17 +3,21 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table("user")
  * @ORM\Entity
  * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
 class User implements UserInterface
 {
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -38,6 +42,20 @@ class User implements UserInterface
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
     private $email;
+
+    /**
+     * @var array $roles
+     *
+     * @ORM\Column(name="roles", type="array")
+     * @Assert\NotNull()
+     * @Assert\Type(type="array")
+     */
+    private $roles;
+
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+    }
 
     public function getId()
     {
@@ -81,7 +99,21 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return $this->roles;
+    }
+
+    public function getRole()
+    {
+        return \in_array(self::ROLE_ADMIN, $this->roles) ? 'Administrateur' : 'Utilisateur';
+    }
+
+    public function setRole(string $role)
+    {
+        if (self::ROLE_ADMIN === $role) {
+            $this->roles = [self::ROLE_USER, self::ROLE_ADMIN];
+        } else {
+            $this->roles = [self::ROLE_USER];
+        }
     }
 
     public function eraseCredentials()

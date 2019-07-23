@@ -1,0 +1,8 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: mariadb
+    database_port: 3306
+    database_name: todo_list
+    database_user: todo_list
+    database_password: todo_list
+    secret: ThisTokenIsNotSoSecretChangeIt

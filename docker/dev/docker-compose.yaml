@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+  nginx:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/nginx/Dockerfile
+    volumes:
+      - ./../..:/app
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb
+      - php
+  php:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/php/Dockerfile
+    volumes:
+      - ./../..:/app
+    depends_on:
+      - mariadb
+      - blackfire
+    env_file:
+      - blackfire/.secret.env
+  mariadb:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/mariadb/Dockerfile
+    volumes:
+      - database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    env_file:
+      - mariadb/.secret.env
+  blackfire:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/blackfire/Dockerfile
+    env_file:
+      - blackfire/.secret.env
+volumes:
+  database:

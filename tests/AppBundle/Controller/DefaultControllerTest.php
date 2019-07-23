@@ -3,16 +3,28 @@
 namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    use ControllerTestTrait;
+
+    public function testGetHomepageUnauthenticated()
     {
-        $client = static::createClient();
+        $testClient = $this->createUnauthenticatedTestClient();
 
-        $crawler = $client->request('GET', '/');
+        $testClient->request('GET', '/');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+        $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testGetHomepageAuthenticated()
+    {
+        $testClient = $this->createAuthenticatedTestClient();
+
+        $crawler = $testClient->request('GET', '/');
+
+        $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
+        $this->assertEquals('Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !', $crawler->filter('.container h1')->text());
     }
 }
