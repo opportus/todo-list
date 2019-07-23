@@ -8,23 +8,23 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetTaskListAuthenticated()
+    public function testGetTaskListWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/tasks');
     }
 
-    public function testGetCreateTaskAuthenticated()
+    public function testGetCreateTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/tasks/create');
     }
 
-    public function testPostCreateTaskAuthenticated()
+    public function testPostCreateTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/create');
 
@@ -36,16 +36,16 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient->submitAndProfile($form);
     }
 
-    public function testGetEditTaskAuthenticated()
+    public function testGetEditTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/tasks/1/edit');
     }
 
-    public function testPostEditTaskAuthenticated()
+    public function testPostEditTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/1/edit');
 
@@ -57,16 +57,16 @@ class TaskControllerPerfTest extends CostAwareWebTestCase
         $testClient->submitAndProfile($form);
     }
 
-    public function testPostToggleTaskAuthenticated()
+    public function testPostToggleTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('POST', '/tasks/1/toggle');
     }
 
-    public function testPostDeleteTaskAuthenticated()
+    public function testPostDeleteTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('POST', '/tasks/1/delete');
     }

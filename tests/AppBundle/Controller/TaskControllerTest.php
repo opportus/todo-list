@@ -9,18 +9,18 @@ class TaskControllerTest extends WebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetTaskListUnauthenticated()
+    public function testGetTaskListWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('GET', '/tasks');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testGetTaskListAuthenticated()
+    public function testGetTaskListWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks');
 
@@ -36,18 +36,18 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Auteur: Melo', \trim($crawler->filter('.task')->eq(1)->filter('.author')->text()));
     }
 
-    public function testGetCreateTaskUnauthenticated()
+    public function testGetCreateTaskWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('GET', '/tasks/create');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testGetCreateTaskAuthenticated()
+    public function testGetCreateTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/create');
 
@@ -58,24 +58,24 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('', $crawler->filter('form #task_content')->text());
     }
 
-    public function testPostCreateTaskUnauthenticated()
+    public function testPostCreateTaskWithNoRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
 
         $crawler = $testClient->request('GET', '/tasks/create');
 
         $form = $crawler->selectButton('Ajouter')->form();
 
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testPostCreateTaskAuthenticated()
+    public function testPostCreateTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/create');
 
@@ -98,18 +98,18 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->last()->filter('.author')->text()));
     }
 
-    public function testGetEditTaskUnauthenticated()
+    public function testGetEditTaskWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('GET', '/tasks/1/edit');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testGetEditTaskAuthenticated()
+    public function testGetEditTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/1/edit');
 
@@ -120,24 +120,24 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', $crawler->filter('form #task_content')->text());
     }
 
-    public function testPostEditTaskUnauthenticated()
+    public function testPostEditTaskWithNoRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
 
         $crawler = $testClient->request('GET', '/tasks/1/edit');
 
         $form = $crawler->selectButton('Modifier')->form();
 
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testPostEditTaskAuthenticated()
+    public function testPostEditTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/tasks/1/edit');
 
@@ -160,18 +160,18 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
-    public function testPostToggleTaskUnauthenticated()
+    public function testPostToggleTaskWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('POST', '/tasks/1/toggle');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testPostToggleTaskAuthenticated()
+    public function testPostToggleTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('POST', '/tasks/1/toggle');
 
@@ -187,18 +187,18 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals('Auteur: Meli', \trim($crawler->filter('.task')->eq(0)->filter('.author')->text()));
     }
 
-    public function testPostDeleteTaskUnautenticated()
+    public function testPostDeleteTaskWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('POST', '/tasks/1/delete');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testPostDeleteTaskAuthenticated()
+    public function testPostDeleteTaskWithAdminRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('POST', '/tasks/1/delete');
 

@@ -9,9 +9,18 @@ class UserControllerTest extends WebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetUserList()
+    public function testGetUserListWithUserRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
+
+        $testClient->request('GET', '/users');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testGetUserListWithAdminRole()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users');
 
@@ -25,9 +34,18 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->eq(1)->filter('td')->eq(2)->text()));
     }
 
-    public function testGetCreateUser()
+    public function testGetCreateUserWithUserRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
+
+        $testClient->request('GET', '/users/create');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testGetCreateUserWithAdminRole()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/create');
 
@@ -45,9 +63,18 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Utilisateur', $crawler->filter('form #user_role option')->first()->text());
     }
 
-    public function testPostCreateUserInvalid()
+    public function testPostCreateUserWithUserRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
+
+        $testClient->request('POST', '/users/create');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testPostCreateUserWithAdminRoleException()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/create');
 
@@ -66,9 +93,9 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('This value is already used.', \trim($crawler->filter('#user_email')->nextAll()->text()));
     }
 
-    public function testPostCreateUserValid()
+    public function testPostCreateUserWithAdminRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/create');
 
@@ -94,9 +121,18 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
     }
 
-    public function testGetEditUser()
+    public function testGetEditUserWithUserRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
+
+        $testClient->request('GET', '/users/1/edit');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testGetEditUserWithAdminRole()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/1/edit');
 
@@ -114,9 +150,18 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Utilisateur', $crawler->filter('form #user_role option')->first()->text());
     }
 
-    public function testPostEditUserInvalid()
+    public function testPostEditUserWithUserRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
+
+        $testClient->request('POST', '/users/1/edit');
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
+    }
+
+    public function testPostEditUserWithAdminRoleException()
+    {
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/1/edit');
 
@@ -135,18 +180,18 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('This value is already used.', \trim($crawler->filter('#user_email')->nextAll()->text()));
     }
 
-    public function testPostEditUserValid()
+    public function testPostEditUserWithAdminRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
-        $crawler = $testClient->request('GET', '/users/1/edit');
+        $crawler = $testClient->request('GET', '/users/2/edit');
 
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'Allo',
             'user[password][first]' => 'azerty',
             'user[password][second]' => 'azerty',
             'user[email]' => 'allo@example.com',
-            'user[role]' => 'ROLE_USER',
+            'user[role]' => 'ROLE_ADMIN',
         ]);
 
         $crawler = $testClient->submit($form);
@@ -158,8 +203,8 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
         $this->assertEquals('Superbe ! L\'utilisateur a bien été modifié', \trim($crawler->filter('.alert-success')->text()));
         $this->assertEquals('Liste des utilisateurs', $crawler->filter('.container h1')->text());
-        $this->assertEquals('Allo', \trim($crawler->filter('table tbody tr')->first()->filter('td')->eq(0)->text()));
-        $this->assertEquals('allo@example.com', \trim($crawler->filter('table tbody tr')->first()->filter('td')->eq(1)->text()));
-        $this->assertEquals('Utilisateur', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
+        $this->assertEquals('Allo', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(0)->text()));
+        $this->assertEquals('allo@example.com', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(1)->text()));
+        $this->assertEquals('Administrateur', \trim($crawler->filter('table tbody tr')->last()->filter('td')->eq(2)->text()));
     }
 }

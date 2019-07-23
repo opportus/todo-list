@@ -10,14 +10,14 @@ class SecurityControllerPerfTest extends CostAwareWebTestCase
 
     public function testGetLogin()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->requestAndProfile('GET', '/login');
     }
 
-    public function testPostLoginValid()
+    public function testPostLogin()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->request('GET', '/login');
 
@@ -29,9 +29,9 @@ class SecurityControllerPerfTest extends CostAwareWebTestCase
         $testClient->submitAndProfile($form);
     }
 
-    public function testPostLoginInvalid()
+    public function testPostLoginException()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->request('GET', '/login');
 

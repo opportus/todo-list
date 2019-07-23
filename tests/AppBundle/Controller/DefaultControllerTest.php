@@ -9,18 +9,18 @@ class DefaultControllerTest extends WebTestCase
 {
     use ControllerTestTrait;
 
-    public function testGetHomepageUnauthenticated()
+    public function testGetHomepageWithNoRole()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('GET', '/');
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testGetHomepageAuthenticated()
+    public function testGetHomepageWithUserRole()
     {
-        $testClient = $this->createAuthenticatedTestClient();
+        $testClient = $this->createTestClientWithUserRole();
 
         $crawler = $testClient->request('GET', '/');
 

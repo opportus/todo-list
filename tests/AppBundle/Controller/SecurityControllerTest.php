@@ -11,16 +11,16 @@ class SecurityControllerTest extends WebTestCase
 
     public function testGetLogin()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $testClient->request('GET', '/login');
 
         $this->assertEquals(Response::HTTP_OK, $testClient->getResponse()->getStatusCode());
     }
 
-    public function testPostLoginValid()
+    public function testPostLogin()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->request('GET', '/login');
 
@@ -38,9 +38,9 @@ class SecurityControllerTest extends WebTestCase
         $this->assertEquals('Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !', \trim($crawler->filter('.container h1')->text()));
     }
 
-    public function testPostLoginInvalid()
+    public function testPostLoginException()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithNoRole();
 
         $crawler = $testClient->request('GET', '/login');
 

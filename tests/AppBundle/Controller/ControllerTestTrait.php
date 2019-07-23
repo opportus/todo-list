@@ -13,24 +13,37 @@ use Symfony\Bundle\FrameworkBundle\Client as TestClient;
 trait ControllerTestTrait
 {
     /**
-     * Creates an unauthenticated test client.
+     * Creates a test client.
      *
      * @return TestClient
      */
-    private function createUnauthenticatedTestClient(): TestClient
+    private function createTestClientWithNoRole(): TestClient
     {
         return static::createClient();
     }
 
     /**
-     * Creates an authenticated test client.
+     * Creates a test client with admin role.
      *
      * @return TestClient
      */
-    private function createAuthenticatedTestClient(): TestClient
+    private function createTestClientWithAdminRole(): TestClient
     {
         return static::createClient([], [
             'PHP_AUTH_USER' => 'Meli',
+            'PHP_AUTH_PW' => 'azerty',
+        ]);
+    }
+
+    /**
+     * Creates a test client with user role.
+     *
+     * @return TestClient
+     */
+    private function createTestClientWithUserRole(): TestClient
+    {
+        return static::createClient([], [
+            'PHP_AUTH_USER' => 'Melo',
             'PHP_AUTH_PW' => 'azerty',
         ]);
     }

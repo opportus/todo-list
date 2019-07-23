@@ -10,21 +10,21 @@ class UserControllerPerfTest extends CostAwareWebTestCase
 
     public function testGetUserList()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/users');
     }
 
     public function testGetCreateUser()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/users/create');
     }
 
     public function testPostCreateUserInvalid()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/create');
 
@@ -39,9 +39,9 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient->submitAndProfile($form);
     }
 
-    public function testPostCreateUserValid()
+    public function testPostCreateUser()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/create');
 
@@ -58,14 +58,14 @@ class UserControllerPerfTest extends CostAwareWebTestCase
 
     public function testGetEditUser()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $testClient->requestAndProfile('GET', '/users/1/edit');
     }
 
-    public function testPostEditUserInvalid()
+    public function testPostEditUserException()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/1/edit');
 
@@ -80,9 +80,9 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient->submitAndProfile($form);
     }
 
-    public function testPostEditUserValid()
+    public function testPostEditUser()
     {
-        $testClient = $this->createUnauthenticatedTestClient();
+        $testClient = $this->createTestClientWithAdminRole();
 
         $crawler = $testClient->request('GET', '/users/1/edit');
 
