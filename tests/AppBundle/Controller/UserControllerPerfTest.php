@@ -13,8 +13,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createUnauthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/users');
-
-        $testClient->outputCost();
     }
 
     public function testGetCreateUser()
@@ -22,8 +20,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createUnauthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/users/create');
-
-        $testClient->outputCost();
     }
 
     public function testPostCreateUserInvalid()
@@ -41,8 +37,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         ]);
 
         $testClient->submitAndProfile($form);
-
-        $testClient->outputCost();
     }
 
     public function testPostCreateUserValid()
@@ -60,8 +54,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         ]);
 
         $testClient->submitAndProfile($form);
-
-        $testClient->outputCost();
     }
 
     public function testGetEditUser()
@@ -69,8 +61,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         $testClient = $this->createUnauthenticatedTestClient();
 
         $testClient->requestAndProfile('GET', '/users/1/edit');
-
-        $testClient->outputCost();
     }
 
     public function testPostEditUserInvalid()
@@ -88,8 +78,6 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         ]);
 
         $testClient->submitAndProfile($form);
-
-        $testClient->outputCost();
     }
 
     public function testPostEditUserValid()
@@ -107,7 +95,5 @@ class UserControllerPerfTest extends CostAwareWebTestCase
         ]);
 
         $testClient->submitAndProfile($form);
-
-        $testClient->outputCost();
     }
 }
