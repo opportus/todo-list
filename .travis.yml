@@ -15,7 +15,7 @@ install:
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:fixtures:load --no-interaction"
 script:
 - docker exec -t todolisttest_php_1 /bin/sh -c "cd /app && phpdbg -qrr vendor/bin/phpunit --coverage-text --strict-coverage --strict-global-state --dont-report-useless-tests"
-- docker exec -t todolisttest_php_1 /bin/sh -c "/app/vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no --config .php_cs.dist"
+- docker exec -t todolisttest_php_1 /bin/sh -c "/app/vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no --config /app/.php_cs.dist"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:yaml /app/app/config"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console lint:twig /app/app/Resources/views"
 - docker exec -t todolisttest_php_1 /bin/sh -c "/app/bin/console doctrine:schema:validate --no-interaction --skip-sync"
