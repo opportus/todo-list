@@ -29,7 +29,8 @@
         "phpunit/phpunit": "^8.2",
         "dama/doctrine-test-bundle": "^6.0",
         "doctrine/doctrine-fixtures-bundle": "^3.2",
-        "blackfire/php-sdk": "^1.18"
+        "blackfire/php-sdk": "^1.18",
+        "friendsofphp/php-cs-fixer": "^2.15"
     },
     "scripts": {
         "post-install-cmd": [

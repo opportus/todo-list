@@ -1,3 +1,4 @@
+/app/config/parameters.yml
 /build/
 /phpunit.xml
 /var/*
@@ -18,3 +19,4 @@
 /docker/*/*/.secret.env.enc.key
 /docker/*/*/.secret.env
 /.phpunit.result.cache
+/.php_cs.cache
