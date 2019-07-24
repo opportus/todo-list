@@ -30,7 +30,6 @@ class TaskVoterTest extends TestCase
 
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $this->token->method('getUser')->willReturn($user);
-
     }
 
     public function getTests()
