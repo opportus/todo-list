@@ -40,8 +40,8 @@ The team leader will accept the pull request only if, in addition with the above
 - The commit messages are detailed and explicit enough.
 - Unit test for each new class is implemented.
 - Unit test for each modified class is updated.
-- Functional test and performance test for each new feature are implemented.
-- Functional test and performance test for each modified feature are update.
+- Functional test for each new feature are implemented.
+- Functional test for each modified feature are update.
 - Travis CI build is passed.
 - Merge conflicts with master branch are non-existent.
 
