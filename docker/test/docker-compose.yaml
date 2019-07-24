@@ -31,7 +31,7 @@ services:
   blackfire:
     build:
       context: ./../..
-      dockerfile: ./docker/dev/blackfire/Dockerfile
+      dockerfile: ./docker/test/blackfire/Dockerfile
     env_file:
       - blackfire/.secret.env
 volumes:
