@@ -13,7 +13,7 @@ The project is centered around an open approach to management and workflow. To t
 3.  Team leader puts the above GitHub issue in the appropriate [Kanban Board](https://github.com/opportus/todo-list/projects).
 4.  Team member assigned to the above GitHub issue tags it with the appropriate *Fibonacci: [1|2|3|5|8|13|...]*.
 5.  Team member assigned to the above GitHub issue opens a [GitHub pull request](#pull-request).
-6.  Team members review the above GitHub pull request (we encourage them to do that for each pull request having as tag *Status: Review* on daily basis).
+6.  Team members review the above GitHub pull request.
 7.  Team leader merges the above GitHub pull request with the master branch.
 
 ## Issue
