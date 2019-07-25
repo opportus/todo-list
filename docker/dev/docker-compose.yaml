@@ -19,6 +19,9 @@ services:
       - ./../..:/app
     depends_on:
       - mariadb
+      - blackfire
+    env_file:
+      - blackfire/.secret.env
   mariadb:
     build:
       context: ./../..
@@ -29,5 +32,11 @@ services:
       - 3306:3306
     env_file:
       - mariadb/.secret.env
+  blackfire:
+    build:
+      context: ./../..
+      dockerfile: ./docker/dev/blackfire/Dockerfile
+    env_file:
+      - blackfire/.secret.env
 volumes:
   database:
