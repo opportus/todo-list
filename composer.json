@@ -30,7 +30,8 @@
         "dama/doctrine-test-bundle": "^6.0",
         "doctrine/doctrine-fixtures-bundle": "^3.2",
         "blackfire/php-sdk": "^1.18",
-        "friendsofphp/php-cs-fixer": "^2.15"
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "symfony/web-server-bundle": "^4.3"
     },
     "scripts": {
         "post-install-cmd": [
