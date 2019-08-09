@@ -30,6 +30,9 @@ cd /path/to/project
 # Set up your local MariaDB Docker service secrets...
 cat docker/dev/mariadb/.secret.env.dist > docker/dev/mariadb/.secret.env
 
+# Set up your local Blackfire Docker service secrets...
+cat docker/dev/blackfire/.secret.env.dist > docker/dev/blackfire/.secret.env
+
 # Set up your local Symfony parameters...
 cat app/config/parameters.yml.dist > app/config/parameters.yml
 
