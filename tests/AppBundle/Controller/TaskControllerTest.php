@@ -173,7 +173,11 @@ class TaskControllerTest extends WebTestCase
     {
         $testClient = $this->createTestClientWithAdminRole();
 
-        $crawler = $testClient->request('POST', '/tasks/1/toggle');
+        $crawler = $testClient->request('get', '/tasks');
+
+        $form = $crawler->filter('.task')->eq(0)->filter('form')->eq(0)->form();
+
+        $crawler = $testClient->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
@@ -200,7 +204,11 @@ class TaskControllerTest extends WebTestCase
     {
         $testClient = $this->createTestClientWithAdminRole();
 
-        $crawler = $testClient->request('POST', '/tasks/2/delete');
+        $crawler = $testClient->request('get', '/tasks');
+
+        $form = $crawler->filter('.task')->eq(1)->filter('form')->eq(1)->form();
+
+        $crawler = $testClient->submit($form);
 
         $this->assertEquals(Response::HTTP_FORBIDDEN, $testClient->getResponse()->getStatusCode());
     }
@@ -209,7 +217,11 @@ class TaskControllerTest extends WebTestCase
     {
         $testClient = $this->createTestClientWithAdminRole();
 
-        $crawler = $testClient->request('POST', '/tasks/1/delete');
+        $crawler = $testClient->request('get', '/tasks');
+
+        $form = $crawler->filter('.task')->eq(0)->filter('form')->eq(1)->form();
+
+        $crawler = $testClient->submit($form);
 
         $this->assertEquals(Response::HTTP_FOUND, $testClient->getResponse()->getStatusCode());
 
