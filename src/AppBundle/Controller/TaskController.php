@@ -80,12 +80,16 @@ class TaskController extends Controller
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task, Request $request)
     {
-        $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $submittedToken = $request->query->get('_token');
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($this->isCsrfTokenValid('security', $submittedToken)) {
+            $task->toggle(!$task->isDone());
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        }
 
         return $this->redirectToRoute('task_list');
     }
@@ -93,17 +97,21 @@ class TaskController extends Controller
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, Request $request)
     {
-        if (false === $this->authorizationChecker->isGranted('DELETE', $task)) {
-            throw new AccessDeniedException();
+        $submittedToken = $request->query->get('_token');
+
+        if ($this->isCsrfTokenValid('security', $submittedToken)) {
+            if (false === $this->authorizationChecker->isGranted('DELETE', $task)) {
+                throw new AccessDeniedException();
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($task);
+            $em->flush();
+
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
         }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
-
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
     }

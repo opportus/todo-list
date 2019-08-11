@@ -21,7 +21,11 @@ security:
                 check_path: login_check
                 always_use_default_target_path:  true
                 default_target_path:  /
-            logout: ~
+                csrf_token_generator: security.csrf.token_manager
+                csrf_token_id: security
+            logout:
+                csrf_token_generator: security.csrf.token_manager
+                csrf_token_id: security
             logout_on_user_change: true
 
     access_control:

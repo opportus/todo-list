@@ -21,9 +21,11 @@
                         <button class="btn btn-success btn-sm pull-right">
                             {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
                         </button>
+                        <input type="hidden" name="_token" value="{{ csrf_token('security') }}"></input>
                     </form>
                     <form action="{{ path('task_delete', {'id' : task.id }) }}">
                         <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                        <input type="hidden" name="_token" value="{{ csrf_token('security') }}"></input>
                     </form>
                 </div>
             </div>
