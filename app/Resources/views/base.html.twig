@@ -43,7 +43,10 @@
                 {% endif %}
 
                 {% if app.user %}
-                <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                <form action="{{ path('logout') }}" method="post">
+                    <input type="hidden" name="_csrf_token" value={{ csrf_token('security') }} />
+                    <button class="pull-right btn btn-danger" type="submit">Se déconnecter</button>
+                </form>
                 {% endif %}
 
                 {% if not app.user and 'login' != app.request.attributes.get('_route') %}
